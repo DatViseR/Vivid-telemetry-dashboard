@@ -1,191 +1,210 @@
-
 library(shiny)
 library(shinythemes)
 library(plotly)
 library(shinyWidgets)
 library(shinycssloaders)
 library(ggplot2)
+library(RColorBrewer)
+
+# Define colors
+PRIMARY_COLOR <- "#4F46E5"
+SECONDARY_COLOR <- "#10B981" 
+ACCENT_COLOR <- "#F59E0B"
+TEXT_COLOR <- "#E5E7EB"
+BG_COLOR <- "#111827"
+CARD_BG <- "#1F2937"
+DARK_ACCENT <- "#374151"
 
 ui <- navbarPage(
   title = tags$span(
-    tags$img(src = "vividvolcano_logo.png", height = "25px", style = "margin-right: 10px;"),
+    tags$img(src = "vividvolcano_logo.png", height = "30px", style = "margin-right: 10px;"),
     "VividVolcano Analytics"
   ),
-  theme = shinytheme("flatly"),
+  id = "navBar",
+  theme = "custom_theme.css", # Will be provided in styles.css
   windowTitle = "VividVolcano Analytics Dashboard",
   
   # Include external CSS
-  tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")
+  header = tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
+    tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"),
+    tags$meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
   ),
   
   # Main Dashboard Tab
   tabPanel("Dashboard",
-           # First row with 4 equal sections
-           fluidRow(
-             # First element - Controls panel with 2x2 tiles grid below
-             column(width = 3,
-                    # Time controls section
-                    div(class = "control-panel",
-                        div(class = "time-range-group",
-                            span(class = "time-range-label", "Time Range:"),
-                            div(class = "time-range-controls",
-                                radioGroupButtons(
-                                  inputId = "timeRange",
-                                  label = NULL,
-                                  choices = c("All Time" = "all", "Last 7 Days" = "7", "Last 30 Days" = "30", "Custom" = "custom"),
-                                  justified = TRUE,
-                                  size = "sm",
-                                  status = "primary",
-                                  checkIcon = list(yes = icon("check"))
-                                )
-                            )
-                        ),
-                        div(class = "custom-date-group",
-                            span(class = "custom-date-label", "Custom Date Range:"),
-                            div(class = "custom-date-input",
-                                dateRangeInput(
-                                  "customDateRange",
-                                  label = NULL,
-                                  start = Sys.Date() - 30,
-                                  end = Sys.Date(),
-                                  width = "100%"
-                                )
-                            )
-                        ),
-                        div(class = "last-updated", 
-                            paste("Last updated:", "2025-03-07 14:02:03", "UTC • by", "DatViseR")
-                        )
-                    ),
-                    
-                    # 2x2 Stats tiles grid
-                    fluidRow(
-                      # First row of tiles
-                      column(width = 6, class = "tile-column",
-                             div(class = "stat-tile",
-                                 div(class = "stat-value", uiOutput("totalSessionsValue")),
-                                 div(class = "stat-title", "Sessions"),
-                                 div(class = "comparison-container", uiOutput("sessionsComparisonText"))
-                             )
-                      ),
-                      column(width = 6, class = "tile-column",
-                             div(class = "stat-tile",
-                                 div(class = "stat-value", uiOutput("firstTimeVisitsValue")),
-                                 div(class = "stat-title", "First-Time"),
-                                 div(class = "comparison-container", uiOutput("visitsComparisonText"))
-                             )
-                      )
-                    ),
-                    fluidRow(
-                      # Second row of tiles
-                      column(width = 6, class = "tile-column",
-                             div(class = "stat-tile",
-                                 div(class = "stat-value", uiOutput("totalUploadsValue")),
-                                 div(class = "stat-title", "Uploads"),
-                                 div(class = "comparison-container", uiOutput("uploadsComparisonText"))
-                             )
-                      ),
-                      column(width = 6, class = "tile-column",
-                             div(class = "stat-tile",
-                                 div(class = "stat-value", uiOutput("totalAnalysesValue")),
-                                 div(class = "stat-title", "Analyses"),
-                                 div(class = "comparison-container", uiOutput("analysesComparisonText"))
-                             )
-                      )
-                    )
-             ),
-             
-             # Second element - Session Duration Histogram
-             column(width = 3,
-                    div(class = "visualization-panel",
-                        div(class = "panel-header", "Session Duration"),
-                        div(class = "panel-body",
-                            plotlyOutput("sessionDurationHist") %>% withSpinner()
-                        )
-                    )
-             ),
-             
-             # Third element - Browser Distribution Pie Chart
-             column(width = 3,
-                    div(class = "visualization-panel",
-                        div(class = "panel-header", "Browser Distribution"),
-                        div(class = "panel-body",
-                            plotlyOutput("browserPie") %>% withSpinner()
-                        )
-                    )
-             ),
-             
-             # Fourth element - Analysis Metrics Bar Chart
-             column(width = 3,
-                    div(class = "visualization-panel",
-                        div(class = "panel-header", "Analysis Metrics"),
-                        div(class = "panel-body",
-                            plotlyOutput("analysisMetricsBar") %>% withSpinner()
-                        )
-                    )
-             )
-           ),
-           
-           # Time Series Section
-           div(class = "section-header", "Time Series Analytics"),
-           fluidRow(
-             # First row of visualizations in 3 columns
-             column(width = 4,
-                    div(class = "visualization-panel",
-                        div(class = "panel-header", "Sessions Over Time"),
-                        div(class = "panel-body",
-                            plotlyOutput("sessionsTimeSeries") %>% withSpinner()
-                        )
-                    )
-             ),
-             column(width = 4,
-                    div(class = "visualization-panel",
-                        div(class = "panel-header", "Uploads Over Time"),
-                        div(class = "panel-body",
-                            plotlyOutput("uploadsTimeSeries") %>% withSpinner()
-                        )
-                    )
-             ),
-             column(width = 4,
-                    div(class = "visualization-panel",
-                        div(class = "panel-header", "Analyses Over Time"),
-                        div(class = "panel-body",
-                            plotlyOutput("analysesTimeSeries") %>% withSpinner()
-                        )
-                    )
-             )
+           div(class = "dash-container",
+               # Control panel area
+               div(class = "control-panel",
+                   div(class = "time-filters",
+                       h4("Time Range", class = "filter-header"),
+                       div(class = "filter-group",
+                           radioGroupButtons(
+                             inputId = "timeRange",
+                             label = NULL,
+                             choices = c("All Time" = "all", "7 Days" = "7", "30 Days" = "30", "Custom" = "custom"),
+                             justified = TRUE,
+                             size = "sm",
+                             status = "primary",
+                             checkIcon = list(yes = icon("check"))
+                           )
+                       ),
+                       div(class = "filter-group",
+                           dateRangeInput(
+                             "customDateRange",
+                             label = NULL,
+                             start = Sys.Date() - 30,
+                             end = Sys.Date(),
+                             width = "100%"
+                           )
+                       ),
+                       div(class = "last-updated", 
+                           icon("clock"), "Updated: 2025-03-07 15:03:59 UTC",
+                           tags$br(),
+                           icon("user"), "User: DatViseR"
+                       )
+                   )
+               ),
+               
+               # Stats cards
+               div(class = "stats-row",
+                   div(class = "stat-card",
+                       div(class = "stat-icon sessions",
+                           icon("users")
+                       ),
+                       div(class = "stat-details",
+                           h3(class = "stat-value", uiOutput("totalSessionsValue")),
+                           p(class = "stat-label", "Total Sessions"),
+                           div(class = "stat-trend", uiOutput("sessionsComparisonText"))
+                       )
+                   ),
+                   div(class = "stat-card",
+                       div(class = "stat-icon visits",
+                           icon("user-plus")
+                       ),
+                       div(class = "stat-details",
+                           h3(class = "stat-value", uiOutput("firstTimeVisitsValue")),
+                           p(class = "stat-label", "New Users"),
+                           div(class = "stat-trend", uiOutput("visitsComparisonText"))
+                       )
+                   ),
+                   div(class = "stat-card",
+                       div(class = "stat-icon uploads",
+                           icon("cloud-upload-alt")
+                       ),
+                       div(class = "stat-details",
+                           h3(class = "stat-value", uiOutput("totalUploadsValue")),
+                           p(class = "stat-label", "Data Uploads"),
+                           div(class = "stat-trend", uiOutput("uploadsComparisonText"))
+                       )
+                   ),
+                   div(class = "stat-card",
+                       div(class = "stat-icon analyses",
+                           icon("chart-bar")
+                       ),
+                       div(class = "stat-details",
+                           h3(class = "stat-value", uiOutput("totalAnalysesValue")),
+                           p(class = "stat-label", "Total Analyses"),
+                           div(class = "stat-trend", uiOutput("analysesComparisonText"))
+                       )
+                   )
+               ),
+               
+               # First row of charts - 3 plots
+               div(class = "charts-row",
+                   div(class = "chart-card",
+                       div(class = "chart-header",
+                           h3("Sessions Over Time"),
+                           div(class = "chart-controls")
+                       ),
+                       div(class = "chart-body",
+                           plotlyOutput("sessionsTimeSeries") %>% withSpinner(color = PRIMARY_COLOR)
+                       )
+                   ),
+                   div(class = "chart-card",
+                       div(class = "chart-header",
+                           h3("Uploads Over Time"),
+                           div(class = "chart-controls")
+                       ),
+                       div(class = "chart-body",
+                           plotlyOutput("uploadsTimeSeries") %>% withSpinner(color = SECONDARY_COLOR)
+                       )
+                   ),
+                   div(class = "chart-card",
+                       div(class = "chart-header",
+                           h3("Activities Over Time"),
+                           div(class = "chart-controls")
+                       ),
+                       div(class = "chart-body",
+                           plotlyOutput("analysesTimeSeries") %>% withSpinner(color = ACCENT_COLOR)
+                       )
+                   )
+               ),
+               
+               # Second row of charts - 3 plots
+               div(class = "charts-row",
+                   div(class = "chart-card",
+                       div(class = "chart-header",
+                           h3("Session Duration"),
+                           div(class = "chart-controls")
+                       ),
+                       div(class = "chart-body",
+                           plotlyOutput("sessionDurationHist") %>% withSpinner(color = PRIMARY_COLOR)
+                       )
+                   ),
+                   div(class = "chart-card",
+                       div(class = "chart-header",
+                           h3("Browser Distribution"),
+                           div(class = "chart-controls")
+                       ),
+                       div(class = "chart-body",
+                           plotlyOutput("browserPie") %>% withSpinner(color = SECONDARY_COLOR)
+                       )
+                   ),
+                   div(class = "chart-card",
+                       div(class = "chart-header",
+                           h3("Analysis Types"),
+                           div(class = "chart-controls")
+                       ),
+                       div(class = "chart-body",
+                           plotlyOutput("analysisMetricsBar") %>% withSpinner(color = ACCENT_COLOR)
+                       )
+                   )
+               )
            )
   ),
   
   # About Tab
   tabPanel("About",
-           fluidRow(
-             column(width = 8, offset = 2,
-                    div(class = "visualization-panel", style = "margin-top: 20px;",
-                        div(class = "panel-header", "VividVolcano Analytics Dashboard"),
-                        div(class = "panel-body",
-                            h4("About This Dashboard"),
-                            p("This dashboard provides analytics for the VividVolcano application, showing usage metrics and user behavior."),
-                            p("The data is collected through a telemetry module and stored in a PostgreSQL database hosted on Supabase."),
-                            h4("Features:"),
-                            tags$ul(
-                              tags$li("Real-time analytics of application usage"),
-                              tags$li("Session tracking and visualization"),
-                              tags$li("Analysis of user workflows and tool usage"),
-                              tags$li("Time-based filtering options")
-                            ),
-                            h4("Technical Details:"),
-                            p("Built with R Shiny, leveraging packages such as shinydashboard, plotly, and DBI for PostgreSQL connections."),
-                            hr(),
-                            div(
-                              tags$a(href = APP_URL, target = "_blank", icon("desktop"), "Open App", class = "btn btn-default"),
-                              tags$a(href = GITHUB_URL, target = "_blank", icon("github"), "GitHub Repository", class = "btn btn-default"),
-                              tags$a(href = LINKEDIN_URL, target = "_blank", icon("linkedin"), "Developer LinkedIn", class = "btn btn-default"),
-                              tags$a(href = DASHBOARD_CODE_URL, target = "_blank", icon("code"), "Dashboard Source", class = "btn btn-default")
-                            )
-                        )
-                    )
-             )
+           div(class = "about-container",
+               div(class = "about-card",
+                   div(class = "card-header",
+                       h2("VividVolcano Analytics Dashboard")
+                   ),
+                   div(class = "card-body",
+                       h4("About This Dashboard"),
+                       p("This dashboard provides analytics for the VividVolcano application, showing usage metrics and user behavior."),
+                       p("The data is collected through a telemetry module and stored in a PostgreSQL database hosted on Supabase."),
+                       
+                       h4("Features"),
+                       tags$ul(
+                         tags$li("Real-time analytics of application usage"),
+                         tags$li("Session tracking and visualization"),
+                         tags$li("Analysis of user workflows and tool usage"),
+                         tags$li("Time-based filtering options")
+                       ),
+                       
+                       h4("Technical Details"),
+                       p("Built with R Shiny, leveraging packages such as shinydashboard, plotly, and DBI for PostgreSQL connections."),
+                       
+                       div(class = "action-buttons",
+                           tags$a(href = APP_URL, target = "_blank", icon("desktop"), "Open App", class = "action-btn app-btn"),
+                           tags$a(href = GITHUB_URL, target = "_blank", icon("github"), "GitHub Repository", class = "action-btn github-btn"),
+                           tags$a(href = LINKEDIN_URL, target = "_blank", icon("linkedin"), "Developer LinkedIn", class = "action-btn linkedin-btn"),
+                           tags$a(href = DASHBOARD_CODE_URL, target = "_blank", icon("code"), "Dashboard Source", class = "action-btn code-btn")
+                       )
+                   )
+               )
            )
   )
 )
