@@ -1,4 +1,8 @@
 server <- function(input, output, session) {
+  # Current date and time for display - using the updated values you provided
+  current_datetime <- "2025-03-07 12:07:44"  # UTC
+  current_user <- "DatViseR"
+  
   # Reactive expression for the filtered data based on time range
   filteredData <- reactive({
     data <- get_telemetry_data()
@@ -9,14 +13,20 @@ server <- function(input, output, session) {
     
     # Apply time filter based on radio button selection
     if (input$timeRange == "7") {
-      data <- filter_data_by_time(data, 7)
+      # Use fixed integers with as.Date instead of days() function
+      cutoff_date <- as.Date(Sys.Date()) - 7
+      data <- data %>% filter(as.Date(session_start) >= cutoff_date)
     } else if (input$timeRange == "30") {
-      data <- filter_data_by_time(data, 30)
+      # Use fixed integers with as.Date instead of days() function
+      cutoff_date <- as.Date(Sys.Date()) - 30
+      data <- data %>% filter(as.Date(session_start) >= cutoff_date)
     } else if (input$timeRange == "custom") {
-      # Filter by custom date range
-      start_date <- as.POSIXct(input$customDateRange[1])
-      end_date <- as.POSIXct(input$customDateRange[2]) + days(1) - seconds(1)
-      data <- data %>% filter(session_start >= start_date & session_start <= end_date)
+      # Filter by custom date range - fixing the approach to avoid Period objects
+      start_date <- as.Date(input$customDateRange[1])
+      end_date <- as.Date(input$customDateRange[2])
+      # Add time component to include the entire end day
+      end_datetime <- as.POSIXct(paste(end_date, "23:59:59"))
+      data <- data %>% filter(session_start >= start_date & session_start <= end_datetime)
     }
     
     return(data)
@@ -32,54 +42,201 @@ server <- function(input, output, session) {
     calculate_metrics(data)
   })
   
-  # Value boxes
-  output$totalSessions <- renderValueBox({
-    m <- metrics()
-    valueBox(
-      m$total_sessions,
-      "Total Sessions",
-      icon = icon("users"),
-      color = "blue"
-    )
-  })
-  
-  output$firstTimeVisits <- renderValueBox({
-    m <- metrics()
-    valueBox(
-      m$first_time_visits,
-      "First-Time Visitors",
-      icon = icon("user-plus"),
-      color = "green"
-    )
-  })
-  
-  output$totalUploads <- renderValueBox({
-    m <- metrics()
-    valueBox(
-      m$total_uploads,
-      "Data Uploads",
-      icon = icon("upload"),
-      color = "purple"
-    )
-  })
-  
-  output$totalAnalyses <- renderValueBox({
-    m <- metrics()
-    gsea <- m$total_gsea
-    volcano <- m$total_volcano
-    total <- gsea + volcano
+  # Reactive function for calculating comparison metrics
+  comparisonMetrics <- reactive({
+    data <- get_telemetry_data()
     
-    valueBox(
-      total,
-      "Total Analyses",
-      icon = icon("chart-bar"),
-      color = "orange"
+    if (is.null(data)) {
+      return(NULL)
+    }
+    
+    # Current period
+    current_data <- filteredData()
+    if (is.null(current_data) || nrow(current_data) == 0) {
+      return(NULL)
+    }
+    
+    # Previous period - depends on selected time range
+    if (input$timeRange == "7") {
+      # Previous 7 days before current period - using Date arithmetic instead of Period
+      previous_start <- as.Date(Sys.Date() - 14)
+      previous_end <- as.Date(Sys.Date() - 8) # One day before current period starts
+      period_text <- "vs previous 7 days"
+    } else if (input$timeRange == "30") {
+      # Previous 30 days before current period
+      previous_start <- as.Date(Sys.Date() - 60)
+      previous_end <- as.Date(Sys.Date() - 31) # One day before current period starts
+      period_text <- "vs previous 30 days"
+    } else {
+      # For custom or all time, use equal period before
+      current_start <- as.Date(min(current_data$session_start))
+      current_end <- as.Date(max(current_data$session_start))
+      date_range <- as.integer(difftime(current_end, current_start, units = "days"))
+      
+      # Ensure we have an integer number of days
+      if (date_range < 1) date_range <- 1
+      
+      previous_end <- current_start - 1 # One day before current period starts
+      previous_start <- previous_end - date_range
+      
+      period_text <- "vs previous equal period"
+    }
+    
+    # Convert to POSIXct for filtering with proper time
+    previous_start_time <- as.POSIXct(paste(previous_start, "00:00:00"))
+    previous_end_time <- as.POSIXct(paste(previous_end, "23:59:59"))
+    
+    previous_data <- data %>%
+      filter(session_start >= previous_start_time & session_start <= previous_end_time)
+    
+    # If previous data is empty, return default values
+    if (nrow(previous_data) == 0) {
+      return(list(
+        sessions_pct = 100,
+        visits_pct = 100,
+        uploads_pct = 100,
+        analyses_pct = 100,
+        period_text = period_text
+      ))
+    }
+    
+    # Calculate metrics for both periods
+    current_metrics <- calculate_metrics(current_data)
+    previous_metrics <- calculate_metrics(previous_data)
+    
+    # Calculate percentage changes
+    sessions_pct <- calculate_percentage_change(
+      current_metrics$total_sessions, 
+      previous_metrics$total_sessions
     )
+    
+    visits_pct <- calculate_percentage_change(
+      current_metrics$first_time_visits, 
+      previous_metrics$first_time_visits
+    )
+    
+    uploads_pct <- calculate_percentage_change(
+      current_metrics$total_uploads, 
+      previous_metrics$total_uploads
+    )
+    
+    analyses_pct <- calculate_percentage_change(
+      (current_metrics$total_gsea + current_metrics$total_volcano), 
+      (previous_metrics$total_gsea + previous_metrics$total_volcano)
+    )
+    
+    return(list(
+      sessions_pct = sessions_pct,
+      visits_pct = visits_pct,
+      uploads_pct = uploads_pct,
+      analyses_pct = analyses_pct,
+      period_text = period_text
+    ))
   })
+  
+  # Helper function to calculate percentage change
+  calculate_percentage_change <- function(current, previous) {
+    if (is.null(previous) || is.na(previous) || previous == 0) {
+      return(100)
+    }
+    return(round((current - previous) / previous * 100))
+  }
+  
+  # Last updated information
+  output$lastUpdateInfo <- renderUI({
+    HTML(paste("Last updated:", current_datetime, "UTC • by", current_user))
+  })
+  
+  # Key metrics value outputs
+  output$totalSessionsValue <- renderUI({
+    m <- metrics()
+    if (is.null(m)) return(HTML("--"))
+    HTML(format(m$total_sessions, big.mark = ","))
+  })
+  
+  output$firstTimeVisitsValue <- renderUI({
+    m <- metrics()
+    if (is.null(m)) return(HTML("--"))
+    HTML(format(m$first_time_visits, big.mark = ","))
+  })
+  
+  output$totalUploadsValue <- renderUI({
+    m <- metrics()
+    if (is.null(m)) return(HTML("--"))
+    HTML(format(m$total_uploads, big.mark = ","))
+  })
+  
+  output$totalAnalysesValue <- renderUI({
+    m <- metrics()
+    if (is.null(m)) return(HTML("--"))
+    total <- m$total_gsea + m$total_volcano
+    HTML(format(total, big.mark = ","))
+  })
+  
+  # Comparison metrics outputs
+  output$sessionsComparisonText <- renderUI({
+    c <- comparisonMetrics()
+    if (is.null(c)) return(NULL)
+    
+    pct <- c$sessions_pct
+    period_text <- c$period_text
+    
+    create_comparison_text(pct, period_text)
+  })
+  
+  output$visitsComparisonText <- renderUI({
+    c <- comparisonMetrics()
+    if (is.null(c)) return(NULL)
+    
+    pct <- c$visits_pct
+    period_text <- c$period_text
+    
+    create_comparison_text(pct, period_text)
+  })
+  
+  output$uploadsComparisonText <- renderUI({
+    c <- comparisonMetrics()
+    if (is.null(c)) return(NULL)
+    
+    pct <- c$uploads_pct
+    period_text <- c$period_text
+    
+    create_comparison_text(pct, period_text)
+  })
+  
+  output$analysesComparisonText <- renderUI({
+    c <- comparisonMetrics()
+    if (is.null(c)) return(NULL)
+    
+    pct <- c$analyses_pct
+    period_text <- c$period_text
+    
+    create_comparison_text(pct, period_text)
+  })
+  
+  # Helper function to create comparison text with appropriate styling
+  create_comparison_text <- function(pct, period_text) {
+    if (pct > 0) {
+      style <- "color: #28a745; font-size: 12px; margin-top: 5px;"
+      icon_html <- icon("arrow-up")
+      text <- paste0("+", pct, "% ", period_text)
+    } else if (pct < 0) {
+      style <- "color: #dc3545; font-size: 12px; margin-top: 5px;"
+      icon_html <- icon("arrow-down")
+      text <- paste0(pct, "% ", period_text)
+    } else {
+      style <- "color: #17a2b8; font-size: 12px; margin-top: 5px;"
+      icon_html <- icon("equals")
+      text <- paste("Same as", period_text)
+    }
+    
+    div(style = style, icon_html, text)
+  }
   
   # Session duration histogram
   output$sessionDurationHist <- renderPlotly({
     data <- filteredData()
+    if (is.null(data) || nrow(data) == 0) return(NULL)
     
     # Remove extreme outliers (more than 3 standard deviations)
     mean_duration <- mean(data$session_duration, na.rm = TRUE)
@@ -97,10 +254,11 @@ server <- function(input, output, session) {
       nbinsx = 20
     ) %>%
       layout(
-        title = "Session Duration Distribution",
+        title = "", # Remove title as it's in the panel header now
         xaxis = list(title = "Duration (minutes)"),
         yaxis = list(title = "Count"),
-        bargap = 0.1
+        bargap = 0.1,
+        margin = list(t = 10) # Reduce top margin since we have the panel header
       )
     
     return(p)
@@ -109,6 +267,8 @@ server <- function(input, output, session) {
   # Browser distribution pie chart
   output$browserPie <- renderPlotly({
     data <- filteredData()
+    if (is.null(data) || nrow(data) == 0) return(NULL)
+    
     browser_counts <- table(data$browser)
     
     colors <- brewer.pal(max(length(browser_counts), 3), "Set3")
@@ -122,8 +282,8 @@ server <- function(input, output, session) {
       hoverinfo = "label+value+percent"
     ) %>%
       layout(
-        title = "Browser Distribution",
-        margin = list(l = 20, r = 20, t = 50, b = 20)
+        title = "", # Remove title as it's in the panel header now
+        margin = list(l = 20, r = 20, t = 10, b = 20) # Reduced top margin
       )
     
     return(p)
@@ -132,6 +292,7 @@ server <- function(input, output, session) {
   # Analysis metrics bar chart
   output$analysisMetricsBar <- renderPlotly({
     m <- metrics()
+    if (is.null(m)) return(NULL)
     
     analysis_data <- data.frame(
       Type = c("GSEA Analyses", "Volcano Plots", "Data Uploads"),
@@ -149,9 +310,10 @@ server <- function(input, output, session) {
       )
     ) %>%
       layout(
-        title = "Analysis Types",
+        title = "", # Remove title as it's in the panel header now
         xaxis = list(title = ""),
-        yaxis = list(title = "Count")
+        yaxis = list(title = "Count"),
+        margin = list(t = 10) # Reduce top margin
       )
     
     return(p)
@@ -160,6 +322,7 @@ server <- function(input, output, session) {
   # Sessions time series
   output$sessionsTimeSeries <- renderPlotly({
     data <- filteredData()
+    if (is.null(data) || nrow(data) == 0) return(NULL)
     
     # Aggregate by day
     daily_sessions <- data %>%
@@ -193,11 +356,12 @@ server <- function(input, output, session) {
         line = list(color = SUCCESS_COLOR)
       ) %>%
       layout(
-        title = "Sessions Over Time",
+        title = "", # Remove title as it's in the panel header now
         xaxis = list(title = "Date"),
         yaxis = list(title = "Count"),
         legend = list(x = 0.01, y = 0.99, bgcolor = "rgba(255,255,255,0.5)"),
-        hovermode = "closest"
+        hovermode = "closest",
+        margin = list(t = 10) # Reduce top margin
       )
     
     return(p)
@@ -206,6 +370,7 @@ server <- function(input, output, session) {
   # Uploads time series
   output$uploadsTimeSeries <- renderPlotly({
     data <- filteredData()
+    if (is.null(data) || nrow(data) == 0) return(NULL)
     
     # Aggregate by day
     daily_uploads <- data %>%
@@ -224,10 +389,11 @@ server <- function(input, output, session) {
       line = list(color = WARNING_COLOR)
     ) %>%
       layout(
-        title = "Daily Data Uploads",
+        title = "", # Remove title as it's in the panel header now
         xaxis = list(title = "Date"),
         yaxis = list(title = "Uploads"),
-        hovermode = "closest"
+        hovermode = "closest",
+        margin = list(t = 10) # Reduce top margin
       )
     
     return(p)
@@ -236,6 +402,7 @@ server <- function(input, output, session) {
   # Analyses time series
   output$analysesTimeSeries <- renderPlotly({
     data <- filteredData()
+    if (is.null(data) || nrow(data) == 0) return(NULL)
     
     # Aggregate by day
     daily_analyses <- data %>%
@@ -265,23 +432,26 @@ server <- function(input, output, session) {
         type = "scatter",
         mode = "lines+markers",
         name = "Volcano Plots",
-        marker = list(color = PRIMARY_COLOR),
-        line = list(color = PRIMARY_COLOR)
+        marker = list(color = WARNING_COLOR),
+        line = list(color = WARNING_COLOR)
       ) %>%
       layout(
-        title = "Daily Analyses",
+        title = "", # Remove title as it's in the panel header now
         xaxis = list(title = "Date"),
         yaxis = list(title = "Count"),
         legend = list(x = 0.01, y = 0.99, bgcolor = "rgba(255,255,255,0.5)"),
-        hovermode = "closest"
+        hovermode = "closest",
+        margin = list(t = 10) # Reduce top margin
       )
     
     return(p)
   })
-  
-  # Refresh data periodically (every 5 minutes)
-  observe({
-    invalidateLater(300000)
-    # This will cause reactive expressions to update
-  })
 }
+
+    
+      
+      
+      
+      
+      
+      

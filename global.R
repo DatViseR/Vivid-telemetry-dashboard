@@ -12,6 +12,8 @@ library(RColorBrewer)
 library(shinyjs)
 library(shinycssloaders)
 library(config)
+library(shinyWidgets)
+library(shinycssloaders)
 
 # Load database functions
 source("database.R")
