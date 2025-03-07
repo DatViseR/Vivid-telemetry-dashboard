@@ -12,8 +12,7 @@ ui <- dashboardPage(
   dashboardSidebar(
     width = 300,
     sidebarMenu(
-      menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
-      menuItem("Time Series", tabName = "timeseries", icon = icon("chart-line")),
+      menuItem("Analytics Dashboard", tabName = "combined_dashboard", icon = icon("gauge-high")),
       menuItem("About", tabName = "about", icon = icon("info-circle"))
     ),
     radioGroupButtons(
@@ -23,6 +22,13 @@ ui <- dashboardPage(
       justified = TRUE,
       status = "primary",
       checkIcon = list(yes = icon("check"))
+    ),
+    dateRangeInput(
+      "customDateRange",
+      "Custom Date Range:",
+      start = Sys.Date() - 30,
+      end = Sys.Date(),
+      width = "100%"
     ),
     br(),
     tags$div(
@@ -57,27 +63,37 @@ ui <- dashboardPage(
         .sidebar-links li {margin-bottom: 10px;}
         .sidebar-links a {color: #fff; text-decoration: none;}
         .sidebar-links a:hover {color: #ccc;}
+        .section-header {
+          background-color: #f8f9fa; 
+          padding: 10px; 
+          margin-bottom: 15px;
+          border-left: 4px solid #3c8dbc;
+          font-weight: bold;
+        }
+        .collapsible-section {
+          margin-bottom: 20px;
+        }
       "))
     ),
     
     tabItems(
+      # Combined Dashboard Tab
       tabItem(
-        tabName = "dashboard",
+        tabName = "combined_dashboard",
         fluidRow(
           column(
             width = 12,
-            h2("App Usage Analytics", style = "margin-bottom: 20px;"),
-            dateRangeInput(
-              "customDateRange",
-              "Custom Date Range:",
-              start = Sys.Date() - 30,
-              end = Sys.Date(),
-              width = "100%"
-            )
+            h2("VividVolcano Analytics Dashboard", style = "margin-bottom: 20px;")
           )
         ),
         
-        # Key metrics
+        # Key Metrics Section
+        fluidRow(
+          column(
+            width = 12,
+            div(class = "section-header", "Key Metrics")
+          )
+        ),
         fluidRow(
           valueBoxOutput("totalSessions", width = 3),
           valueBoxOutput("firstTimeVisits", width = 3),
@@ -85,44 +101,19 @@ ui <- dashboardPage(
           valueBoxOutput("totalAnalyses", width = 3)
         ),
         
-        # Charts
+        # Time Series Section
         fluidRow(
-          box(
-            title = "Session Duration Distribution",
-            status = "primary",
-            solidHeader = TRUE,
-            width = 6,
-            plotlyOutput("sessionDurationHist") %>% withSpinner()
-          ),
-          box(
-            title = "Browser Distribution",
-            status = "primary",
-            solidHeader = TRUE,
-            width = 6,
-            plotlyOutput("browserPie") %>% withSpinner()
+          column(
+            width = 12,
+            div(class = "section-header", "Time Series Analytics")
           )
         ),
-        
-        # Analysis metrics
-        fluidRow(
-          box(
-            title = "Analysis Metrics",
-            status = "info",
-            solidHeader = TRUE,
-            width = 12,
-            plotlyOutput("analysisMetricsBar") %>% withSpinner()
-          )
-        )
-      ),
-      
-      tabItem(
-        tabName = "timeseries",
-        h2("Time Series Analytics"),
         fluidRow(
           box(
             title = "Sessions Over Time",
             status = "primary",
             solidHeader = TRUE,
+            collapsible = TRUE,
             width = 12,
             plotlyOutput("sessionsTimeSeries") %>% withSpinner()
           )
@@ -132,6 +123,7 @@ ui <- dashboardPage(
             title = "Uploads Over Time",
             status = "warning",
             solidHeader = TRUE,
+            collapsible = TRUE,
             width = 6,
             plotlyOutput("uploadsTimeSeries") %>% withSpinner()
           ),
@@ -139,12 +131,58 @@ ui <- dashboardPage(
             title = "Analyses Over Time",
             status = "success",
             solidHeader = TRUE,
+            collapsible = TRUE,
             width = 6,
             plotlyOutput("analysesTimeSeries") %>% withSpinner()
+          )
+        ),
+        
+        # Distribution Charts Section
+        fluidRow(
+          column(
+            width = 12,
+            div(class = "section-header", "Usage Distribution")
+          )
+        ),
+        fluidRow(
+          box(
+            title = "Session Duration Distribution",
+            status = "primary",
+            solidHeader = TRUE,
+            collapsible = TRUE,
+            width = 6,
+            plotlyOutput("sessionDurationHist") %>% withSpinner()
+          ),
+          box(
+            title = "Browser Distribution",
+            status = "primary",
+            solidHeader = TRUE,
+            collapsible = TRUE,
+            width = 6,
+            plotlyOutput("browserPie") %>% withSpinner()
+          )
+        ),
+        
+        # Analysis Metrics Section
+        fluidRow(
+          column(
+            width = 12,
+            div(class = "section-header", "Analysis Metrics")
+          )
+        ),
+        fluidRow(
+          box(
+            title = "Analysis Metrics Breakdown",
+            status = "info",
+            solidHeader = TRUE,
+            collapsible = TRUE,
+            width = 12,
+            plotlyOutput("analysisMetricsBar") %>% withSpinner()
           )
         )
       ),
       
+      # About Tab (kept separate)
       tabItem(
         tabName = "about",
         h2("About This Dashboard"),
