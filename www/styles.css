@@ -1,0 +1,207 @@
+/* Navbar styling */
+.nav-tabs {
+  margin-bottom: 20px;
+  background-color: #3c8dbc;
+  border-bottom: none;
+}
+
+.nav-tabs>li>a {
+  color: white !important;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+  background-color: #fff;
+  color: #3c8dbc !important;
+}
+
+/* Section headers */
+.section-header {
+  background-color: #f8f9fa;
+  padding: 10px 15px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 18px;
+  border-left: 4px solid #3c8dbc;
+  border-radius: 0 4px 4px 0;
+}
+
+/* Controls panel */
+.control-panel {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  padding: 15px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+}
+
+.time-range-group {
+  margin-bottom: 15px;
+}
+
+.time-range-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.time-range-controls {
+  width: 100%;
+}
+
+.custom-date-group {
+  margin-bottom: 15px;
+}
+
+.custom-date-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.custom-date-input {
+  width: 100%;
+}
+
+.last-updated {
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+  text-align: right;
+  margin-top: 10px;
+}
+
+/* Stat tiles */
+.tile-column {
+  padding: 0 5px;
+}
+
+.stat-tile {
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  transition: transform 0.2s;
+  height: 100px; /* Fixed height for consistent appearance */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.stat-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #3c8dbc;
+}
+
+.stat-title {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #666;
+}
+
+.comparison-container {
+  min-height: 20px;
+  font-size: 10px;
+}
+
+/* Visualization panels */
+.visualization-panel {
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+  background-color: #f8f9fa;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.panel-body {
+  padding: 15px;
+  flex-grow: 1;
+  min-height: 300px;
+  position: relative;
+}
+
+/* Button styles */
+.btn-default {
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+/* Colors for charts */
+:root {
+  --primary-color: #3c8dbc;
+  --success-color: #28a745;
+  --info-color: #17a2b8;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+}
+
+/* Spinner customization */
+.shiny-spinner .spinner {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Make all columns in first row equal height */
+.row:first-of-type > [class*="col-"] {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.row:first-of-type > [class*="col-"] > .visualization-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .row:first-of-type > [class*="col-"] {
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .panel-body {
+    min-height: 250px;
+  }
+  
+  .stat-tile {
+    height: 90px;
+  }
+}
+
+@media (max-width: 768px) {
+  .panel-body {
+    min-height: 200px;
+  }
+  
+  .stat-tile {
+    height: 80px;
+  }
+  
+  .stat-value {
+    font-size: 20px;
+  }
+}
