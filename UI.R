@@ -124,20 +124,20 @@ ui <- navbarPage(
                    ),
                    div(class = "chart-card",
                        div(class = "chart-header",
-                           h3("Uploads Over Time"),
+                           h4("Uploads Over Time"),
                            div(class = "chart-controls")
                        ),
                        div(class = "chart-body",
-                           highchartOutput("uploadsTimeSeries", height = "350px")
+                           highchartOutput("uploadsTimeSeries", height = "250px")
                        )
                    ),
                    div(class = "chart-card",
                        div(class = "chart-header",
-                           h3("Activities Over Time"),
+                           h4("Activities Over Time"),
                            div(class = "chart-controls")
                        ),
                        div(class = "chart-body",
-                           highchartOutput("analysesTimeSeries", height = "350px")
+                           highchartOutput("analysesTimeSeries", height = "250px")
                        )
                    )
                ),
@@ -146,29 +146,29 @@ ui <- navbarPage(
                div(class = "charts-row",
                    div(class = "chart-card",
                        div(class = "chart-header",
-                           h3("Session Duration"),
+                           h4("Session Duration"),
                            div(class = "chart-controls")
                        ),
                        div(class = "chart-body",
-                           highchartOutput("sessionDurationHist", height = "350px")
+                           highchartOutput("sessionDurationHist", height = "250px")
                        )
                    ),
                    div(class = "chart-card",
                        div(class = "chart-header",
-                           h3("Browser Distribution"),
+                           h4("Browser Distribution"),
                            div(class = "chart-controls")
                        ),
                        div(class = "chart-body",
-                           highchartOutput("browserPie", height = "350px")
+                           highchartOutput("browserTree", height = "250px")
                        )
                    ),
                    div(class = "chart-card",
                        div(class = "chart-header",
-                           h3("Analysis Types"),
+                           h4("Trend Analysis"),
                            div(class = "chart-controls")
                        ),
                        div(class = "chart-body",
-                           highchartOutput("analysisMetricsBar", height = "350px")
+                           highchartOutput("Trend_plot", height = "250px")
                        )
                    )
                )
