@@ -674,7 +674,7 @@ server <- function(input, output, session) {
             dataLabels = list(
               enabled = TRUE,
               style = list(
-                fontSize = "14px",
+                fontSize = "12px",
                 textOutline = "none"
               )
             ),

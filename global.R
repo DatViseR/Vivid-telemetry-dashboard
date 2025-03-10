@@ -1,7 +1,6 @@
 # Load required packages
 library(shiny)
 library(shinydashboard)
-library(shinydashboardPlus)
 library(shinyWidgets)
 library(DBI)
 library(RPostgres)
@@ -11,10 +10,9 @@ library(lubridate)
 library(RColorBrewer)
 library(shinyjs)
 library(shinycssloaders)
-library(config)
 library(ggplot2)
 library(highcharter)
-library(RColorBrewer)
+
 
 
 # Load database functions

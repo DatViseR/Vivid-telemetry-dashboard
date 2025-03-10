@@ -30,7 +30,7 @@ ui <- navbarPage(
                fluidRow(
                  # Time Range
                  column(4,
-                        h4("Time Range", class = "filter-header"),
+                        h4("Time Range:", class = "filter-header"),
                         div(class = "filter-group",
                             radioGroupButtons(
                               inputId = "timeRange",
@@ -45,7 +45,7 @@ ui <- navbarPage(
                  ),
                  # Custom Date Range
                  column(4,
-                        h4("Custom Time Range", class = "filter-header"),
+                        h4("Custom Time Range:", class = "filter-header"),
                         div(class = "filter-group",
                             dateRangeInput(
                               "customDateRange",
@@ -68,119 +68,127 @@ ui <- navbarPage(
 
                
                # Stats cards
-               div(class = "stats-row",
-                   div(class = "stat-card",
-                       div(class = "stat-icon sessions",
-                           icon("users")
-                       ),
-                       div(class = "stat-details",
-                           h3(class = "stat-value", uiOutput("totalSessionsValue")),
-                           p(class = "stat-label","Total Sessions"),
-                           div(class = "stat-trend", uiOutput("sessionsComparisonText"))
-                       )
-                   ),
-                   div(class = "stat-card",
-                       div(class = "stat-icon visits",
-                           icon("user-plus")
-                       ),
-                       div(class = "stat-details",
-                           h3(class = "stat-value", uiOutput("firstTimeVisitsValue")),
-                           p(class = "stat-label", "New Users"),
-                           div(class = "stat-trend", uiOutput("visitsComparisonText"))
-                       )
-                   ),
-                   div(class = "stat-card",
-                       div(class = "stat-icon uploads",
-                           icon("cloud-upload-alt")
-                       ),
-                       div(class = "stat-details",
-                           h3(class = "stat-value", uiOutput("totalUploadsValue")),
-                           p(class = "stat-label", "Data Uploads"),
-                           div(class = "stat-trend", uiOutput("uploadsComparisonText"))
-                       )
-                   ),
-                   div(class = "stat-card",
-                       div(class = "stat-icon analyses",
-                           icon("chart-bar")
-                       ),
-                       div(class = "stat-details",
-                           h3(class = "stat-value", uiOutput("totalAnalysesValue")),
-                           p(class = "stat-label", "Total Analyses"),
-                           div(class = "stat-trend", uiOutput("analysesComparisonText"))
-                       )
-                   )
+               fluidRow(
+                 column(width = 3,
+                        div(class = "stat-card",
+                            div(class = "stat-icon sessions",
+                                icon("users")
+                            ),
+                            div(class = "stat-details",
+                                h3(class = "stat-value", uiOutput("totalSessionsValue")),
+                                p(class = "stat-label", "Total Sessions"),
+                                div(class = "stat-trend", uiOutput("sessionsComparisonText"))
+                            )
+                        )
+                 ),
+                 column(width = 3,
+                        div(class = "stat-card",
+                            div(class = "stat-icon visits",
+                                icon("user-plus")
+                            ),
+                            div(class = "stat-details",
+                                h3(class = "stat-value", uiOutput("firstTimeVisitsValue")),
+                                p(class = "stat-label", "New Users"),
+                                div(class = "stat-trend", uiOutput("visitsComparisonText"))
+                            )
+                        )
+                 ),
+                 column(width = 3,
+                        div(class = "stat-card",
+                            div(class = "stat-icon uploads",
+                                icon("cloud-upload-alt")
+                            ),
+                            div(class = "stat-details",
+                                h3(class = "stat-value", uiOutput("totalUploadsValue")),
+                                p(class = "stat-label", "Data Uploads"),
+                                div(class = "stat-trend", uiOutput("uploadsComparisonText"))
+                            )
+                        )
+                 ),
+                 column(width = 3,
+                        div(class = "stat-card",
+                            div(class = "stat-icon analyses",
+                                icon("chart-bar")
+                            ),
+                            div(class = "stat-details",
+                                h3(class = "stat-value", uiOutput("totalAnalysesValue")),
+                                p(class = "stat-label", "Total Analyses"),
+                                div(class = "stat-trend", uiOutput("analysesComparisonText"))
+                            )
+                        )
+                 )
                ),
                
                # First row of charts - 3 plots
-               div(class = "charts-row",
-                   div(class = "chart-card",
-                       div(class = "chart-header",
-                           h4("Sessions Over Time"),
-                           div(class = "chart-controls")
-                       ),
-                       div(class = "chart-body",
-                            highchartOutput("sessionsTimeSeries", height = "250px")
-                       )
-                   ),
-                   div(class = "chart-card",
-                       div(class = "chart-header",
-                           h4("Uploads Over Time"),
-                           div(class = "chart-controls")
-                       ),
-                       div(class = "chart-body",
-                           highchartOutput("uploadsTimeSeries", height = "250px")
-                       )
-                   ),
-                   div(class = "chart-card",
-                       div(class = "chart-header",
-                           h4("Activities Over Time"),
-                           div(class = "chart-controls")
-                       ),
-                       div(class = "chart-body",
-                           highchartOutput("analysesTimeSeries", height = "250px")
-                       )
-                   )
+               fluidRow(
+                 column(width = 4,
+                        box(
+                          width = NULL, # Takes full width of the column
+                          title = "Sessions Over Time",
+                          status = "primary",
+                          solidHeader = TRUE,
+                          highchartOutput("sessionsTimeSeries", height = "250px")
+                        )
+                 ),
+                 column(width = 4,
+                        box(
+                          width = NULL,
+                          title = "Uploads Over Time",
+                          status = "primary", 
+                          solidHeader = TRUE,
+                          highchartOutput("uploadsTimeSeries", height = "250px")
+                        )
+                 ),
+                 column(width = 4,
+                        box(
+                          width = NULL,
+                          title = "Activities Over Time",
+                          status = "primary",
+                          solidHeader = TRUE,
+                          highchartOutput("analysesTimeSeries", height = "250px")
+                        )
+                 )
                ),
                
                # Second row of charts - 3 plots
-               div(class = "charts-row",
-                   div(class = "chart-card",
-                       div(class = "chart-header",
-                           h4("Session Duration"),
-                           div(class = "chart-controls")
-                       ),
-                       div(class = "chart-body",
-                           highchartOutput("sessionDurationHist", height = "250px")
-                       )
-                   ),
-                   div(class = "chart-card",
-                       div(class = "chart-header",
-                           h4("Browser Distribution"),
-                           div(class = "chart-controls")
-                       ),
-                       div(class = "chart-body",
-                           highchartOutput("browserTree", height = "250px")
-                       )
-                   ),
-                   div(class = "chart-card",
-                       div(class = "chart-header",
-                           h4("Trend Analysis"),
-                           div(class = "chart-controls")
-                       ),
-                       div(class = "chart-body",
-                           highchartOutput("Trend_plot", height = "250px")
-                       )
-                   )
-               )
-           )
-  ),
+               fluidRow(
+                 column(width = 4,
+                        box(
+                          width = NULL,
+                          title = "Session Duration",
+                          status = "primary",
+                          solidHeader = TRUE,
+                          highchartOutput("sessionDurationHist", height = "250px")
+                        )
+                 ),
+                 column(width = 4,
+                        box(
+                          width = NULL,
+                          title = "Browser Distribution",
+                          status = "primary",
+                          solidHeader = TRUE,
+                          highchartOutput("browserTree", height = "250px")
+                        )
+                 ),
+                 column(width = 4,
+                        box(
+                          width = NULL,
+                          title = "Trend Analysis",
+                          status = "primary",
+                          solidHeader = TRUE,
+                          highchartOutput("Trend_plot", height = "250px")
+                        )
+                        )
+                 )# Close the fluidRow for second row of charts
+                 ) # Close the div with class="dash-container"
+               ), # Close the Dashboard tabPanel
   
   # About Tab
   tabPanel("About",
            div(class = "about-container",
                div(class = "about-card",
                    div(class = "card-header",
-                       h2("VividVolcano Analytics Dashboard")
+                       h2("Vivid Volcano Analytics Dashboard")
                    ),
                    div(class = "card-body",
                        h4("About This Dashboard"),
