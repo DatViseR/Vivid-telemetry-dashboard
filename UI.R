@@ -1,10 +1,3 @@
-library(shiny)
-library(shinythemes)
-library(plotly)
-library(shinyWidgets)
-library(shinycssloaders)
-library(ggplot2)
-library(RColorBrewer)
 
 # Define colors
 PRIMARY_COLOR <- "#4F46E5"
@@ -17,12 +10,12 @@ DARK_ACCENT <- "#374151"
 
 ui <- navbarPage(
   title = tags$span(
-    tags$img(src = "vividvolcano_logo.png", height = "30px", style = "margin-right: 10px;"),
-    "VividVolcano Analytics"
+    tags$img(src = "Vivid_volcano_logo.png", height = "50px", style = "margin-right: 10px;"),
+    "Vivid-Volcano Analytics"
   ),
   id = "navBar",
   theme = "custom_theme.css", # Will be provided in styles.css
-  windowTitle = "VividVolcano Analytics Dashboard",
+  windowTitle = "Vivid-Volcano Analytics Dashboard",
   
   # Include external CSS
   header = tags$head(
@@ -34,37 +27,45 @@ ui <- navbarPage(
   # Main Dashboard Tab
   tabPanel("Dashboard",
            div(class = "dash-container",
-               # Control panel area
-               div(class = "control-panel",
-                   div(class = "time-filters",
-                       h4("Time Range", class = "filter-header"),
-                       div(class = "filter-group",
-                           radioGroupButtons(
-                             inputId = "timeRange",
-                             label = NULL,
-                             choices = c("All Time" = "all", "7 Days" = "7", "30 Days" = "30", "Custom" = "custom"),
-                             justified = TRUE,
-                             size = "sm",
-                             status = "primary",
-                             checkIcon = list(yes = icon("check"))
-                           )
-                       ),
-                       div(class = "filter-group",
-                           dateRangeInput(
-                             "customDateRange",
-                             label = NULL,
-                             start = Sys.Date() - 30,
-                             end = Sys.Date(),
-                             width = "100%"
-                           )
-                       ),
-                       div(class = "last-updated", 
-                           icon("clock"), "Updated: 2025-03-07 15:03:59 UTC",
-                           tags$br(),
-                           icon("user"), "User: DatViseR"
-                       )
-                   )
+               fluidRow(
+                 # Time Range
+                 column(4,
+                        h4("Time Range", class = "filter-header"),
+                        div(class = "filter-group",
+                            radioGroupButtons(
+                              inputId = "timeRange",
+                              label = NULL,
+                              choices = c("All Time" = "all", "7 Days" = "7", "30 Days" = "30", "Custom" = "custom"),
+                              justified = TRUE,
+                              size = "sm",
+                              status = "primary",
+                              checkIcon = list(yes = icon("check"))
+                            )
+                        )
+                 ),
+                 # Custom Date Range
+                 column(4,
+                        h4("Custom Time Range", class = "filter-header"),
+                        div(class = "filter-group",
+                            dateRangeInput(
+                              "customDateRange",
+                              label = NULL,
+                              start = Sys.Date() - 30,
+                              end = Sys.Date(),
+                              width = "100%"
+                            )
+                        )
+                 ),
+                 # Last Updated
+                 column(4,
+                        div(class = "last-updated", 
+                            h4(icon("database"), "Last database query:", class = "filter-header"),
+                            icon("clock"), " Timeoutput"
+                        )
+                 )
                ),
+     
+
                
                # Stats cards
                div(class = "stats-row",
