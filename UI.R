@@ -115,11 +115,11 @@ ui <- navbarPage(
                div(class = "charts-row",
                    div(class = "chart-card",
                        div(class = "chart-header",
-                           h3("Sessions Over Time"),
+                           h4("Sessions Over Time"),
                            div(class = "chart-controls")
                        ),
                        div(class = "chart-body",
-                           plotlyOutput("sessionsTimeSeries") %>% withSpinner(color = PRIMARY_COLOR)
+                            highchartOutput("sessionsTimeSeries", height = "250px")
                        )
                    ),
                    div(class = "chart-card",
@@ -128,7 +128,7 @@ ui <- navbarPage(
                            div(class = "chart-controls")
                        ),
                        div(class = "chart-body",
-                           plotlyOutput("uploadsTimeSeries") %>% withSpinner(color = SECONDARY_COLOR)
+                           highchartOutput("uploadsTimeSeries", height = "350px")
                        )
                    ),
                    div(class = "chart-card",
@@ -137,7 +137,7 @@ ui <- navbarPage(
                            div(class = "chart-controls")
                        ),
                        div(class = "chart-body",
-                           plotlyOutput("analysesTimeSeries") %>% withSpinner(color = ACCENT_COLOR)
+                           highchartOutput("analysesTimeSeries", height = "350px")
                        )
                    )
                ),
@@ -150,7 +150,7 @@ ui <- navbarPage(
                            div(class = "chart-controls")
                        ),
                        div(class = "chart-body",
-                           plotlyOutput("sessionDurationHist") %>% withSpinner(color = PRIMARY_COLOR)
+                           highchartOutput("sessionDurationHist", height = "350px")
                        )
                    ),
                    div(class = "chart-card",
@@ -159,7 +159,7 @@ ui <- navbarPage(
                            div(class = "chart-controls")
                        ),
                        div(class = "chart-body",
-                           plotlyOutput("browserPie") %>% withSpinner(color = SECONDARY_COLOR)
+                           highchartOutput("browserPie", height = "350px")
                        )
                    ),
                    div(class = "chart-card",
@@ -168,7 +168,7 @@ ui <- navbarPage(
                            div(class = "chart-controls")
                        ),
                        div(class = "chart-body",
-                           plotlyOutput("analysisMetricsBar") %>% withSpinner(color = ACCENT_COLOR)
+                           highchartOutput("analysisMetricsBar", height = "350px")
                        )
                    )
                )

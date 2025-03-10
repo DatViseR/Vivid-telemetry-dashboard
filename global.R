@@ -13,17 +13,13 @@ library(shinyjs)
 library(shinycssloaders)
 library(config)
 library(ggplot2)
-
-
-
-
-
-
+library(highcharter)
+library(RColorBrewer)
 
 
 # Load database functions
 source("database.R")
-
+source("highcharter_theme.R")
 # App metadata
 APP_NAME <- "Vivid-Volcano Analytics"
 GITHUB_URL <- "https://github.com/DatViseR/Vivid-Volcano"
