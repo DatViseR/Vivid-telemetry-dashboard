@@ -60,7 +60,7 @@ ui <- navbarPage(
                  column(4,
                         div(class = "last-updated", 
                             h4(icon("database"), "Last database query:", class = "filter-header"),
-                            icon("clock"), " Timeoutput"
+                            p(icon("clock"), " ", textOutput("lastQueryTime", inline = TRUE))
                         )
                  )
                ),
@@ -75,7 +75,7 @@ ui <- navbarPage(
                        ),
                        div(class = "stat-details",
                            h3(class = "stat-value", uiOutput("totalSessionsValue")),
-                           p(class = "stat-label", "Total Sessions"),
+                           p(class = "stat-label","Total Sessions"),
                            div(class = "stat-trend", uiOutput("sessionsComparisonText"))
                        )
                    ),

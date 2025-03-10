@@ -896,4 +896,29 @@ server <- function(input, output, session) {
   })  
   
   
+# Last database query time output----
+  output$lastQueryTime <- renderText({
+    # Get the current session start time or database query time
+    query_time <- session_start_time()
+    
+    # Format the time nicely
+    if (!is.null(query_time)) {
+      format(query_time, "%Y-%m-%d %H:%M:%S")
+    } else {
+      format(Sys.time(), "%Y-%m-%d %H:%M:%S")  # Fallback to current time if not available
+    }
+  })
+  
+  # Function to get/store session start time
+  session_start_time <- local({
+    start_time <- NULL
+    function() {
+      # Initialize time if not set yet
+      if (is.null(start_time)) {
+        start_time <<- Sys.time()
+      }
+      return(start_time)
+    }
+  })
+  
 }

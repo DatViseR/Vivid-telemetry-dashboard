@@ -171,12 +171,12 @@ body {
 
 .stat-label {
   color: var(--text-dim);
-  font-size: 0.875rem;
+  font-size: 1.5rem !important;
   margin: 0.25rem 0;
 }
 
 .stat-trend {
-  font-size: 0.75rem;
+  font-size: 1rem !important;
   display: flex;
   align-items: center;
 }
@@ -190,10 +190,10 @@ body {
 }
 
 .chart-card {
-  background-color: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
+  background-color: transparent; /* Changed from var(--card-bg) to transparent */
+  border: none; /* Remove border */
+  box-shadow: none; /* Remove shadow */
+
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -207,3 +207,7 @@ body {
 
 .chart-header {
   padding: 1
+    border-bottom: none; /* Remove border if it exists */
+  background-color: transparent; /* Make header transparent too */
+  
+}
