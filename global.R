@@ -1,7 +1,6 @@
 # Load required packages
 library(shiny)
 library(shinydashboard)
-library(shinydashboardPlus)
 library(shinyWidgets)
 library(DBI)
 library(RPostgres)
@@ -11,19 +10,13 @@ library(lubridate)
 library(RColorBrewer)
 library(shinyjs)
 library(shinycssloaders)
-library(config)
-library(ggplot2)
-
-
-
-
-
+library(highcharter)
 
 
 
 # Load database functions
 source("database.R")
-
+source("highcharter_theme.R")
 # App metadata
 APP_NAME <- "Vivid-Volcano Analytics"
 GITHUB_URL <- "https://github.com/DatViseR/Vivid-Volcano"
