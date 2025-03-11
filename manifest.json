@@ -2432,6 +2432,37 @@
         "RemoteSha": "1.1.0"
       }
     },
+    "shinydashboard": {
+      "Source": "CRAN",
+      "Repository": "https://cloud.r-project.org",
+      "description": {
+        "Package": "shinydashboard",
+        "Title": "Create Dashboards with 'Shiny'",
+        "Version": "0.7.2",
+        "Authors@R": "c(\n    person(\"Winston\", \"Chang\", role = c(\"aut\", \"cre\"), email = \"winston@rstudio.com\"),\n    person(\"Barbara\", \"Borges Ribeiro\", role = \"aut\", email = \"barbara@rstudio.com\"),\n    person(family = \"RStudio\", role = \"cph\"),\n    person(family = \"Almasaeed Studio\", role = c(\"ctb\", \"cph\"), comment = \"AdminLTE theme for Bootstrap\"),\n    person(family = \"Adobe Systems Incorporated\", role = c(\"ctb\", \"cph\"), comment = \"Source Sans Pro font\")\n    )",
+        "Description": "Create dashboards with 'Shiny'. This package provides\n    a theme on top of 'Shiny', making it easy to create attractive dashboards.",
+        "URL": "http://rstudio.github.io/shinydashboard/",
+        "Depends": "R (>= 3.0)",
+        "License": "GPL (>= 2) | file LICENSE",
+        "Imports": "utils, shiny (>= 1.0.0), htmltools (>= 0.2.6), promises",
+        "BugReports": "https://github.com/rstudio/shinydashboard",
+        "RoxygenNote": "6.0.1.9000",
+        "NeedsCompilation": "no",
+        "Packaged": "2021-09-29 17:40:23 UTC; winston",
+        "Author": "Winston Chang [aut, cre],\n  Barbara Borges Ribeiro [aut],\n  RStudio [cph],\n  Almasaeed Studio [ctb, cph] (AdminLTE theme for Bootstrap),\n  Adobe Systems Incorporated [ctb, cph] (Source Sans Pro font)",
+        "Maintainer": "Winston Chang <winston@rstudio.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2021-09-30 12:10:06 UTC",
+        "Built": "R 4.4.2; ; 2025-02-25 03:41:00 UTC; windows",
+        "RemoteType": "standard",
+        "RemotePkgRef": "shinydashboard",
+        "RemoteRef": "shinydashboard",
+        "RemoteRepos": "https://cloud.r-project.org",
+        "RemoteReposName": "CRAN",
+        "RemotePkgPlatform": "x86_64-w64-mingw32",
+        "RemoteSha": "0.7.2"
+      }
+    },
     "shinyjs": {
       "Source": "CRAN",
       "Repository": "https://cloud.r-project.org",
@@ -3079,7 +3110,7 @@
       "checksum": "7d9d9c5594c67841404f0f3f7ce4850a"
     },
     ".Rprofile": {
-      "checksum": "58e8e13554ecc53f69dde986ee9b2b9e"
+      "checksum": "ea46504cb43578c95892df8928c5a3c9"
     },
     "app.R": {
       "checksum": "3a4925eacdda79a3975793035557d416"
@@ -3088,7 +3119,7 @@
       "checksum": "dca4fe18f049a27a1474a19455d83c3c"
     },
     "global.R": {
-      "checksum": "c7dd6ee63ca5290bcc55787df952fbc9"
+      "checksum": "c6624fb705cae83b79cb87f73ecc7383"
     },
     "highcharter_theme.R": {
       "checksum": "effe01e1f564ffa5b8758cc9683bc3af"
@@ -3100,7 +3131,7 @@
       "checksum": "74f48f8ad667b0eea32f024f73fbb284"
     },
     "renv.lock": {
-      "checksum": "762682a43439e9fe2c4a8eabe3efce49"
+      "checksum": "ea7b18c65525ab18a2aac0ef9538fb51"
     },
     "Rplot.pdf": {
       "checksum": "2099f310a06a6cbcd095ae6222825cad"
@@ -3112,7 +3143,7 @@
       "checksum": "e9c4d8dded7600752815d69626df2806"
     },
     "UI.R": {
-      "checksum": "37f7be69acc8346daf5db162a4b31223"
+      "checksum": "62d5398fdcfcbdd6a4708232d2790fa5"
     },
     "www/styles.css": {
       "checksum": "c7d5e09b9943a76a2e23ec56b9d3ec56"
