@@ -10,7 +10,6 @@ library(lubridate)
 library(RColorBrewer)
 library(shinyjs)
 library(shinycssloaders)
-library(ggplot2)
 library(highcharter)
 
 

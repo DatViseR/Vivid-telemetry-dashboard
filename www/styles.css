@@ -66,10 +66,10 @@ body {
 
 /* === Dashboard Container === */
 .dash-container {
-  padding: 0.6rem; /* Further reduced vertical padding */
+  padding: 0.6rem; 
   display: flex;
   flex-direction: column;
-  gap: 0.6rem; /* Further reduced gap */
+  gap: 0.6rem; 
 }
 
 /* Control panel styling */
@@ -107,8 +107,8 @@ body {
 
 /* Spacing for filter-group and last-updated sections */
 .filter-group, .last-updated {
-  margin-bottom: 5px; /* Reduced */
-  width: 95%; /* Slightly squeezed horizontally */
+  margin-bottom: 5px; 
+  width: 95%; 
   margin: 0 auto;
 }
 
@@ -122,10 +122,10 @@ body {
 /* You can add responsive adjustments if needed */
 @media (max-width: 767px) {
   .filter-group {
-    margin-bottom: 10px; /* Reduced from 20px */
+    margin-bottom: 10px; 
   }
   .last-updated {
-    margin-bottom: 10px; /* Reduced from 20px */
+    margin-bottom: 10px; 
   }
 }
 
@@ -240,7 +240,7 @@ body {
 
 /* === Value and label on same line === */
 .stat-value {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-weight: 600;
   color: var(--text);
   margin-right: 8px;
@@ -249,13 +249,13 @@ body {
 
 .stat-label {
   color: var(--text-dim);
-  font-size: 1.5rem !important;
+  font-size: 1.7rem !important;
   white-space: nowrap;
 }
 
 /* === Trend on next line === */
 .stat-trend {
-  font-size: 1rem !important;
+  font-size: 1.2rem !important;
   width: 100%;
   display: block;
   margin-top: 5px;
@@ -276,7 +276,7 @@ body {
   }
   
   .stat-value, .stat-label {
-    font-size: 1.3rem !important; /* Slightly smaller font on small screens */
+    font-size: 1.5rem !important; /* Slightly smaller font on small screens */
   }
 }
 
@@ -292,11 +292,8 @@ body {
 /* Add hover effect to box components that replaced chart cards */
 .box {
   transition: transform 0.2s ease;
-  
-  /* Further reduce top and bottom margins for boxes */
   margin-top: 1px !important;
   margin-bottom: 1px !important;
-  /* Add horizontal margins to boxes */
   margin-left: 5px !important;
   margin-right: 5px !important;
 }
@@ -322,12 +319,12 @@ body {
 
 /* Adjust box body padding to reduce space inside chart containers */
 .box-body {
-  padding: 0.2rem !important; /* Reduced */
+  padding: 0.2rem !important; 
 }
 
 /* Make box titles smaller */
 .box-header h3, .box-title {
-  font-size: 1.5rem !important; 
+  font-size: 1.7rem !important; 
   font-weight: 500;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
@@ -343,4 +340,186 @@ body {
 /* Make sure the highcharts have minimal margins */
 .highcharts-container {
   margin: 0 !important;
+}
+
+/* Media query for charts on middle-sized screens - show 2 columns instead of 3 */
+@media (min-width: 768px) and (max-width: 991px) {
+  /* Target the column width to make it 50% instead of 33.33% */
+  .dash-container > .row:not(.tiles):not(.controls) > .col-sm-4,
+  .dash-container > .row:not(.tiles):not(.controls) > .col-md-4 {
+    width: 50% !important;
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+  }
+  
+  /* Center the 2-column layout */
+  .dash-container > .row:not(.tiles):not(.controls) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  /* Adjust the chart heights for the wider containers */
+  .dash-container > .row:not(.tiles):not(.controls) .highchartOutput {
+    height: 270px !important; /* Slightly taller charts when they're wider */
+  }
+  
+  /* Make the last chart in odd-numbered sets be centered and wider */
+  .dash-container > .row:not(.tiles):not(.controls):last-child > .col-sm-4:last-child,
+  .dash-container > .row:not(.tiles):not(.controls):last-child > .col-md-4:last-child {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* For small screens, stack charts in a single column */
+@media (max-width: 767px) {
+  .dash-container > .row:not(.tiles):not(.controls) > .col-sm-4,
+  .dash-container > .row:not(.tiles):not(.controls) > .col-md-4 {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* Slightly smaller titles on mobile */
+  .box-header h3, .box-title {
+    font-size: 1.5rem !important;
+  }
+}
+
+
+/* === Action Buttons === */
+/* Action Buttons styling for About page */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 30px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  border: none;
+}
+
+.action-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  color: white;
+  text-decoration: none;
+}
+
+.action-btn:active {
+  transform: translateY(1px);
+}
+
+.action-btn i {
+  font-size: 1.7rem;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
+
+/* Button-specific styling */
+.app-btn {
+  background: linear-gradient(135deg, var(--primary), #818cf8);
+}
+
+.app-btn:hover {
+  background: linear-gradient(135deg, #4338ca, var(--primary));
+}
+
+.github-btn {
+  background: linear-gradient(135deg, #333, #555);
+}
+
+.github-btn:hover {
+  background: linear-gradient(135deg, #222, #444);
+}
+
+.linkedin-btn {
+  background: linear-gradient(135deg, #0077b5, #00a0dc);
+}
+
+.linkedin-btn:hover {
+  background: linear-gradient(135deg, #005f90, #0077b5);
+}
+
+.code-btn {
+    background: linear-gradient(135deg, #333, #555);
+}
+
+.code-btn:hover {
+  background: linear-gradient(135deg, #222, #444);
+}
+
+/* Add a subtle pulse animation to buttons */
+@keyframes subtle-pulse {
+  0% { box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1); }
+  50% { box-shadow: 0 3px 20px rgba(0, 0, 0, 0.2); }
+  100% { box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1); }
+}
+
+.action-btn:after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  bottom: -50%;
+  left: -50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+  transform: rotateZ(60deg) translate(-5em, 7.5em);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.action-btn:hover:after {
+  animation: shine 1s forwards;
+  opacity: 1;
+}
+
+@keyframes shine {
+  100% {
+    transform: rotateZ(60deg) translate(1em, -9em);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .action-buttons {
+    max-width: 75%;
+    margin: 20px auto;
+  }
+  
+  .action-btn {
+    padding: 12px 16px;
+    font-size: 1.3rem;
+  }
+}
+
+.about-container {
+ /* center the contents */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px;
+ 
 }

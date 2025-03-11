@@ -3,8 +3,7 @@
 # Configuration for connecting to Supabase PostgreSQL
 
 get_db_config <- function() {
-  # In production, you should use config package or environment variables
-  # This is a placeholder - replace with your actual credentials
+  # uses Renriron file content -  hidden variables
   list(
     dbname = Sys.getenv("TELEMETRY_DB_NAME"),
     host = Sys.getenv("TELEMETRY_DB_HOST"),

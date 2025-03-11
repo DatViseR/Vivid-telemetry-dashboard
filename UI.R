@@ -192,7 +192,7 @@ ui <- navbarPage(
                    ),
                    div(class = "card-body",
                        h4("About This Dashboard"),
-                       p("This dashboard provides analytics for the VividVolcano application, showing usage metrics and user behavior."),
+                       p("This dashboard provides analytics for the Vivid Volcano application, showing usage metrics and user behavior."),
                        p("The data is collected through a telemetry module and stored in a PostgreSQL database hosted on Supabase."),
                        
                        h4("Features"),
@@ -200,15 +200,16 @@ ui <- navbarPage(
                          tags$li("Real-time analytics of application usage"),
                          tags$li("Session tracking and visualization"),
                          tags$li("Analysis of user workflows and tool usage"),
-                         tags$li("Time-based filtering options")
+                         tags$li("Time-based filtering options"),
+                         tags$li("Trend analysis")
                        ),
                        
                        h4("Technical Details"),
-                       p("Built with R Shiny, leveraging packages such as shinydashboard, plotly, and DBI for PostgreSQL connections."),
+                       p("Built with R Shiny, leveraging packages such as shinydashboard, highcharter, and DBI for PostgreSQL connections."),
                        
                        div(class = "action-buttons",
-                           tags$a(href = APP_URL, target = "_blank", icon("desktop"), "Open App", class = "action-btn app-btn"),
-                           tags$a(href = GITHUB_URL, target = "_blank", icon("github"), "GitHub Repository", class = "action-btn github-btn"),
+                           tags$a(href = APP_URL, target = "_blank", icon("desktop"), "Open Vivid Volcano App", class = "action-btn app-btn"),
+                           tags$a(href = GITHUB_URL, target = "_blank", icon("github"), "GitHub Repository for Vivid Volcano", class = "action-btn github-btn"),
                            tags$a(href = LINKEDIN_URL, target = "_blank", icon("linkedin"), "Developer LinkedIn", class = "action-btn linkedin-btn"),
                            tags$a(href = DASHBOARD_CODE_URL, target = "_blank", icon("code"), "Dashboard Source", class = "action-btn code-btn")
                        )
