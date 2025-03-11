@@ -1,70 +1,75 @@
-# Database connection and data retrieval functions
 
-# Configuration for connecting to Supabase PostgreSQL
-
-get_db_config <- function() {
-  # uses Renriron file content -  hidden variables
+get_api_config <- function() {
+  # Uses .Renviron file content - hidden variables
   list(
-    dbname = Sys.getenv("TELEMETRY_DB_NAME"),
-    host = Sys.getenv("TELEMETRY_DB_HOST"),
-    port = Sys.getenv("TELEMETRY_DB_PORT", 5432),
-    user = Sys.getenv("TELEMETRY_DB_USER"),
-    password = Sys.getenv("TELEMETRY_DB_PASSWORD")
+    supabase_url = Sys.getenv("SUPABASE_URL"),
+    supabase_key = Sys.getenv("SUPABASE_API_KEY")
   )
 }
 
-# Connect to the database
-connect_to_db <- function() {
-  config <- get_db_config()
+# Function to fetch data from Supabase API
+fetch_from_api <- function(endpoint, query_params = NULL) {
+  config <- get_api_config()
+  
+  if (config$supabase_url == "" || config$supabase_key == "") {
+    message("Missing Supabase configuration. Check your .Renviron file.")
+    return(NULL)
+  }
+  
+  url <- paste0(config$supabase_url, "/rest/v1/", endpoint)
   
   tryCatch({
-    conn <- DBI::dbConnect(
-      RPostgres::Postgres(),
-      dbname = config$dbname,
-      host = config$host,
-      port = config$port,
-      user = config$user,
-      password = config$password
+    response <- GET(
+      url = url,
+      add_headers(
+        "apikey" = config$supabase_key,
+        "Authorization" = paste("Bearer", config$supabase_key),
+        "Content-Type" = "application/json"
+      ),
+      query = query_params
     )
-    return(conn)
+    
+    if (http_error(response)) {
+      message("API request failed: ", content(response, "text"))
+      return(NULL)
+    }
+    
+    data <- fromJSON(content(response, "text", encoding = "UTF-8"))
+    return(data)
+    
   }, error = function(e) {
-    message("Failed to connect to database: ", e$message)
+    message("Error in API request: ", e$message)
     return(NULL)
   })
 }
 
-# Get telemetry data from database
+# Get telemetry data from Supabase
 get_telemetry_data <- function() {
-  conn <- connect_to_db()
-  
-  if (is.null(conn)) {
-    # Return sample data for development or if connection fails
+  # Use sample data if .Renviron variables aren't set up
+  if (Sys.getenv("SUPABASE_URL") == "" || Sys.getenv("SUPABASE_API_KEY") == "") {
+    message("API credentials not found. Using sample data.")
     return(read.csv("sample_data.csv"))
   }
   
-  tryCatch({
-    # Adjust table name if needed
-    query <- "SELECT * FROM app_usage_stats"
-    data <- dbGetQuery(conn, query)
-    
-    # Convert timestamps to POSIXct
-    data$session_start <- as.POSIXct(data$session_start, tz = "UTC")
-    data$session_end <- as.POSIXct(data$session_end, tz = "UTC")
-    
-    # Calculate session duration in minutes
-    data$session_duration <- as.numeric(difftime(data$session_end, 
-                                                 data$session_start, 
-                                                 units = "mins"))
-    
-    # Close connection
-    dbDisconnect(conn)
-    
-    return(data)
-  }, error = function(e) {
-    message("Error fetching telemetry data: ", e$message)
-    dbDisconnect(conn)
-    return(NULL)
-  })
+  # Fetch data from the app_usage_stats table
+  data <- fetch_from_api("app_usage_stats")
+  
+  if (is.null(data)) {
+    # Return sample data if API request fails
+    message("Failed to fetch data from API. Using sample data.")
+    return(read.csv("sample_data.csv"))
+  }
+  
+  # Convert timestamps to POSIXct
+  data$session_start <- as.POSIXct(data$session_start, tz = "UTC")
+  data$session_end <- as.POSIXct(data$session_end, tz = "UTC")
+  
+  # Calculate session duration in minutes
+  data$session_duration <- as.numeric(difftime(data$session_end, 
+                                               data$session_start, 
+                                               units = "mins"))
+  
+  return(data)
 }
 
 # Filter data for a specific time range (days_ago can be NULL for all time)
