@@ -15,9 +15,6 @@ library(httr)
 library(jsonlite)
 
 
-# Load database functions
-source("database.R")
-source("highcharter_theme.R")
 # App metadata
 APP_NAME <- "Vivid-Volcano Analytics"
 GITHUB_URL <- "https://github.com/DatViseR/Vivid-Volcano"
