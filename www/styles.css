@@ -146,16 +146,33 @@ body {
 }
 
 /* === Stats Cards === */
+/* === Center the tiles container === */
+.tiles {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap; /* Allow wrapping for responsive behavior */
+  margin-bottom: 15px;
+}
+
+/* Make columns use minimum width needed and be responsive */
+.tiles > [class*='col-'] {
+  display: flex;
+  justify-content: center;
+  padding: 0 5px;
+  min-width: 230px; /* Set minimum width for responsive behavior */
+  flex: 1 1 auto; /* Allow growing and shrinking */
+}
+
+/* === Stats Cards === */
 .stat-card {
-  background-color: rgba(79, 70, 229, 0.15);
+  background-color: transparent;
   border-radius: var(--radius);
   padding: 1.25rem;
   display: flex;
   align-items: center;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
   transition: transform 0.2s ease;
-  width: auto; /* Only use space needed */
+  width: 100%; /* Fill the parent container */
   margin: 0 auto;
 }
 
@@ -166,8 +183,7 @@ body {
 /* Add horizontal spacing for stat cards */
 .col-sm-3 .stat-card,
 .col-md-3 .stat-card {
-  margin-left: 8px !important;
-  margin-right: 8px !important;
+  margin: 5px !important;
 }
 
 /* === Icon styling === */
@@ -179,6 +195,7 @@ body {
   align-items: center;
   justify-content: center;
   margin-right: 1rem;
+  flex-shrink: 0; /* Prevent icon from shrinking */
 }
 
 .stat-icon i {
@@ -205,7 +222,20 @@ body {
 
 /* === Content styling === */
 .stat-details {
-  display: inline-block;
+  flex: 1;
+}
+
+/* Fix for h3 and p elements to make them appear inline */
+.stat-details h3.stat-value {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+.stat-details p.stat-label {
+  display: inline;
+  margin: 0;
+  padding: 0;
 }
 
 /* === Value and label on same line === */
@@ -213,8 +243,6 @@ body {
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--text);
-  margin: 0;
-  display: inline;
   margin-right: 8px;
   white-space: nowrap;
 }
@@ -222,8 +250,6 @@ body {
 .stat-label {
   color: var(--text-dim);
   font-size: 1.5rem !important;
-  margin: 0;
-  display: inline;
   white-space: nowrap;
 }
 
@@ -236,6 +262,31 @@ body {
   text-align: left;
   white-space: normal; /* Allow wrapping if needed */
 }
+
+/* Media queries for better responsiveness */
+@media (max-width: 992px) {
+  .tiles > [class*='col-'] {
+    flex-basis: 50%; /* Two cards per row on medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .tiles > [class*='col-'] {
+    flex-basis: 100%; /* One card per row on small screens */
+  }
+  
+  .stat-value, .stat-label {
+    font-size: 1.3rem !important; /* Slightly smaller font on small screens */
+  }
+}
+
+
+
+
+
+
+
+
 
 /* === Charts === */
 /* Add hover effect to box components that replaced chart cards */
