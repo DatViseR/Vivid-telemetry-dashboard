@@ -59,6 +59,32 @@ server <- function(input, output, session) {
     calculate_metrics(data)
   })
   
+  # Replace the previous observer with this one
+  observeEvent(input$customDateRange, {
+    # Use updateRadioGroupButtons for shinyWidgets::radioGroupButtons
+    shinyWidgets::updateRadioGroupButtons(
+      session = session,
+      inputId = "timeRange",
+      selected = "custom"
+    )
+    
+    # For debugging - log to the console
+    message("📅 Custom date range changed to: ", 
+            format(input$customDateRange[1], "%Y-%m-%d"), " to ", 
+            format(input$customDateRange[2], "%Y-%m-%d"))
+    
+    # Also output a notification to verify the event is triggering
+    showNotification(
+      paste("Date range selected:", 
+            format(input$customDateRange[1], "%Y-%m-%d"), "to", 
+            format(input$customDateRange[2], "%Y-%m-%d")),
+      type = "message",
+      duration = 3
+    )
+  })
+  
+  
+  
   # Comparison metrics
   comparisonMetrics <- reactive({
     # We'll use the unfiltered data from the database to compare current vs. previous

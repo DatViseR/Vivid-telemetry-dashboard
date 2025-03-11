@@ -1764,7 +1764,7 @@
       "Repository": "https://cloud.r-project.org",
       "description": {
         "Package": "jsonlite",
-        "Version": "1.9.0",
+        "Version": "1.9.1",
         "Title": "A Simple and Robust JSON Parser and Generator for R",
         "License": "MIT + file LICENSE",
         "Depends": "methods",
@@ -1778,19 +1778,19 @@
         "RoxygenNote": "7.2.3",
         "Encoding": "UTF-8",
         "NeedsCompilation": "yes",
-        "Packaged": "2025-02-19 13:02:13 UTC; jeroen",
+        "Packaged": "2025-03-03 14:17:56 UTC; jeroen",
         "Author": "Jeroen Ooms [aut, cre] (<https://orcid.org/0000-0002-4035-0289>),\n  Duncan Temple Lang [ctb],\n  Lloyd Hilaiel [cph] (author of bundled libyajl)",
-        "Repository": "RSPM",
-        "Date/Publication": "2025-02-19 15:50:06 UTC",
-        "Built": "R 4.4.0; x86_64-w64-mingw32; 2025-02-20 04:33:33 UTC; windows",
+        "Repository": "CRAN",
+        "Date/Publication": "2025-03-03 22:10:02 UTC",
+        "Built": "R 4.4.3; x86_64-w64-mingw32; 2025-03-09 01:40:07 UTC; windows",
         "Archs": "x64",
         "RemoteType": "standard",
         "RemotePkgRef": "jsonlite",
         "RemoteRef": "jsonlite",
-        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
+        "RemoteRepos": "https://cloud.r-project.org",
         "RemoteReposName": "CRAN",
         "RemotePkgPlatform": "x86_64-w64-mingw32",
-        "RemoteSha": "1.9.0"
+        "RemoteSha": "1.9.1"
       }
     },
     "knitr": {
@@ -3613,16 +3613,16 @@
       "checksum": "7d9d9c5594c67841404f0f3f7ce4850a"
     },
     ".Rprofile": {
-      "checksum": "2673d1d0d2b231654472c1bef7efb8cc"
+      "checksum": "756d2da3dd618d9791de8572996f1a6d"
     },
     "app.R": {
       "checksum": "7731891bb3241b2b01d5a29226f6d38c"
     },
     "Database.R": {
-      "checksum": "6c998dbfe7fd295b7ec351c57f21adcf"
+      "checksum": "8b8cc45d3a9dcba25367c2b0f32a84fc"
     },
     "global.R": {
-      "checksum": "59ba35d3facbf025f20cba9de02c4a6e"
+      "checksum": "72db6f4e083cb2657051f3a9a50ac383"
     },
     "highcharter_theme.R": {
       "checksum": "effe01e1f564ffa5b8758cc9683bc3af"
@@ -3634,7 +3634,7 @@
       "checksum": "74f48f8ad667b0eea32f024f73fbb284"
     },
     "renv.lock": {
-      "checksum": "50ebb28c608f4b830d56a6512a103c3f"
+      "checksum": "3076c4d931db55de0dbe94043952712d"
     },
     "Rplot.pdf": {
       "checksum": "2099f310a06a6cbcd095ae6222825cad"
@@ -3643,10 +3643,10 @@
       "checksum": "f52bc6863c522fc0cc1f087c272b6cad"
     },
     "server.R": {
-      "checksum": "26c8c1870890b63889528ca8fcae0a86"
+      "checksum": "e9c4d8dded7600752815d69626df2806"
     },
     "UI.R": {
-      "checksum": "7d4b6592372f3269a8261f389b989340"
+      "checksum": "674331ce955934544a03d3bb0ff749f8"
     },
     "www/styles.css": {
       "checksum": "c7d5e09b9943a76a2e23ec56b9d3ec56"

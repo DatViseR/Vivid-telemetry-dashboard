@@ -45,7 +45,7 @@ ui <- navbarPage(
                  ),
                  # Custom Date Range
                  column(4,
-                        h4("Custom Time Range:", class = "filter-header"),
+                        h4("Select custom Time Range:", class = "filter-header"),
                         div(class = "filter-group",
                             dateRangeInput(
                               "customDateRange",
