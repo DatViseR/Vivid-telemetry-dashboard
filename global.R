@@ -1,6 +1,7 @@
 # Load required packages
 library(shiny)
 library(shinyWidgets)
+library(shinydashboard)
 library(DBI)
 library(RPostgres)
 library(dplyr)
