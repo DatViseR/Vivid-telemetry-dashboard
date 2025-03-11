@@ -5,16 +5,16 @@ get_api_config <- function() {
   # Uses .Renviron file content - hidden variables
   list(
     supabase_url = Sys.getenv("SUPABASE_URL"),
-
-    supabase_key = Sys.getenv("SUPABASE_KEY"),
-
-    supabase_key = Sys.getenv("SUPABASE_API_KEY")
-
+    # Use SUPABASE_KEY as main key name, with SUPABASE_API_KEY as fallback
+    supabase_key = if(Sys.getenv("SUPABASE_KEY") != "") {
+      Sys.getenv("SUPABASE_KEY")
+    } else {
+      Sys.getenv("SUPABASE_API_KEY")
+    }
   )
 }
 
 # Function to fetch data from Supabase API
-
 fetch_from_api <- function(endpoint, method = "GET", body = NULL, query_params = NULL) {
   config <- get_api_config()
   
@@ -36,8 +36,14 @@ fetch_from_api <- function(endpoint, method = "GET", body = NULL, query_params =
       `Prefer` = "return=representation"
     )
     
-    # Make the appropriate request
-    response <- httr::GET(url, headers, query = query_params)
+    # Make the appropriate request based on method
+    response <- switch(method,
+                       "GET" = httr::GET(url, headers, query = query_params),
+                       "POST" = httr::POST(url, headers, body = jsonlite::toJSON(body, auto_unbox = TRUE), query = query_params),
+                       "PATCH" = httr::PATCH(url, headers, body = jsonlite::toJSON(body, auto_unbox = TRUE), query = query_params),
+                       # Default to GET
+                       httr::GET(url, headers, query = query_params)
+    )
     
     # Check if the request was successful
     if (httr::status_code(response) < 300) {
@@ -56,45 +62,11 @@ fetch_from_api <- function(endpoint, method = "GET", body = NULL, query_params =
     }
   }, error = function(e) {
     message("❌ Error calling Supabase API: ", e$message)
-
-fetch_from_api <- function(endpoint, query_params = NULL) {
-  config <- get_api_config()
-  
-  if (config$supabase_url == "" || config$supabase_key == "") {
-    message("Missing Supabase configuration. Check your .Renviron file.")
-    return(NULL)
-  }
-  
-  url <- paste0(config$supabase_url, "/rest/v1/", endpoint)
-  
-  tryCatch({
-    response <- GET(
-      url = url,
-      add_headers(
-        "apikey" = config$supabase_key,
-        "Authorization" = paste("Bearer", config$supabase_key),
-        "Content-Type" = "application/json"
-      ),
-      query = query_params
-    )
-    
-    if (http_error(response)) {
-      message("API request failed: ", content(response, "text"))
-      return(NULL)
-    }
-    
-    data <- fromJSON(content(response, "text", encoding = "UTF-8"))
-    return(data)
-    
-  }, error = function(e) {
-    message("Error in API request: ", e$message)
-
     return(NULL)
   })
 }
 
-
-# Get telemetry data from database (now using Supabase API)
+# Get telemetry data from Supabase
 get_telemetry_data <- function() {
   # Test Supabase connection
   message("🔄 Testing Supabase API connection...")
@@ -104,18 +76,10 @@ get_telemetry_data <- function() {
     message("❌ Supabase credentials not found in .Renviron file")
     message("📝 Please add SUPABASE_URL and SUPABASE_KEY to your .Renviron file")
     message("⚠️ Using sample data as fallback")
-
-# Get telemetry data from Supabase
-get_telemetry_data <- function() {
-  # Use sample data if .Renviron variables aren't set up
-  if (Sys.getenv("SUPABASE_URL") == "" || Sys.getenv("SUPABASE_API_KEY") == "") {
-    message("API credentials not found. Using sample data.")
-
     return(read.csv("sample_data.csv"))
   }
   
   # Fetch data from the app_usage_stats table
-
   message("🔄 Fetching telemetry data from Supabase API...")
   data <- fetch_from_api("app_usage_stats")
   
@@ -198,29 +162,9 @@ get_telemetry_data <- function() {
   # Count valid duration records
   valid_duration_count <- sum(!is.na(data$session_duration))
   message(paste0("⏱️ Valid session durations: ", valid_duration_count, " out of ", nrow(data), " records"))
-
-  data <- fetch_from_api("app_usage_stats")
-  
-  if (is.null(data)) {
-    # Return sample data if API request fails
-    message("Failed to fetch data from API. Using sample data.")
-    return(read.csv("sample_data.csv"))
-  }
-  
-  # Convert timestamps to POSIXct
-  data$session_start <- as.POSIXct(data$session_start, tz = "UTC")
-  data$session_end <- as.POSIXct(data$session_end, tz = "UTC")
-  
-  # Calculate session duration in minutes
-  data$session_duration <- as.numeric(difftime(data$session_end, 
-                                               data$session_start, 
-                                               units = "mins"))
-
   
   return(data)
 }
-
-# The following functions are kept exactly the same as in the original code
 
 # Filter data for a specific time range (days_ago can be NULL for all time)
 filter_data_by_time <- function(data, days_ago = NULL) {
@@ -228,9 +172,9 @@ filter_data_by_time <- function(data, days_ago = NULL) {
     return(data)
   }
   
-  cutoff_date <- Sys.time() - days(days_ago)
+  cutoff_date <- Sys.time() - lubridate::days(days_ago)
   filtered_data <- data %>% 
-    filter(session_start >= cutoff_date)
+    dplyr::filter(session_start >= cutoff_date)
   
   message(paste0("📅 Filtered data to ", nrow(filtered_data), " records from past ", days_ago, " days"))
   return(filtered_data)
@@ -255,6 +199,3 @@ calculate_metrics <- function(data) {
   
   return(metrics)
 }
-
-# Log current time and user - for debugging purposes
-message(paste0("🕒 Telemetry dashboard loaded at: ", format(Sys.time(), "%Y-%m-%d %H:%M:%S UTC")))
