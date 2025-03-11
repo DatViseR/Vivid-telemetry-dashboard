@@ -153,7 +153,7 @@ ui <- navbarPage(
                # Second row of charts - 3 plots
                fluidRow(
                  column(width = 4,
-                        box(
+                        shinydashboard::box(
                           width = NULL,
                           title = "Session Duration",
                           status = "primary",
@@ -162,7 +162,7 @@ ui <- navbarPage(
                         )
                  ),
                  column(width = 4,
-                        box(
+                        shinydashboard::box(
                           width = NULL,
                           title = "Browser Distribution",
                           status = "primary",
@@ -171,7 +171,7 @@ ui <- navbarPage(
                         )
                  ),
                  column(width = 4,
-                        box(
+                        shinydashboard::box(
                           width = NULL,
                           title = "Trend Analysis",
                           status = "primary",
