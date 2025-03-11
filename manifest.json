@@ -3613,16 +3613,27 @@
       "checksum": "7d9d9c5594c67841404f0f3f7ce4850a"
     },
     ".Rprofile": {
+<<<<<<< HEAD
       "checksum": "756d2da3dd618d9791de8572996f1a6d"
+=======
+      "checksum": "7a87a34fc4a0b6dd32c704c058e86f35"
+>>>>>>> c75e80f02e51f8b255c873dce590f0967412300f
     },
     "app.R": {
       "checksum": "7731891bb3241b2b01d5a29226f6d38c"
     },
     "Database.R": {
+<<<<<<< HEAD
       "checksum": "8b8cc45d3a9dcba25367c2b0f32a84fc"
     },
     "global.R": {
       "checksum": "72db6f4e083cb2657051f3a9a50ac383"
+=======
+      "checksum": "c4ee22b53651358b83dfb76a8f6e149d"
+    },
+    "global.R": {
+      "checksum": "b2a65b3ececa3b682b08de3ae86654d0"
+>>>>>>> c75e80f02e51f8b255c873dce590f0967412300f
     },
     "highcharter_theme.R": {
       "checksum": "effe01e1f564ffa5b8758cc9683bc3af"

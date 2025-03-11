@@ -13,6 +13,10 @@ library(shinycssloaders)
 library(highcharter)
 library(httr)
 library(jsonlite)
+<<<<<<< HEAD
+=======
+
+>>>>>>> c75e80f02e51f8b255c873dce590f0967412300f
 
 
 # App metadata
