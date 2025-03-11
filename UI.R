@@ -27,7 +27,7 @@ ui <- navbarPage(
   # Main Dashboard Tab
   tabPanel("Dashboard",
            div(class = "dash-container",
-               fluidRow(
+               fluidRow(class = "controls", 
                  # Time Range
                  column(4,
                         h4("Time Range:", class = "filter-header"),
@@ -68,7 +68,7 @@ ui <- navbarPage(
 
                
                # Stats cards
-               fluidRow(
+               fluidRow(class = "tiles", 
                  column(width = 3,
                         div(class = "stat-card",
                             div(class = "stat-icon sessions",
