@@ -193,7 +193,7 @@ ui <- navbarPage(
                    div(class = "card-body",
                        h4("About This Dashboard"),
                        p("This dashboard provides analytics for the Vivid Volcano application, showing usage metrics and user behavior."),
-                       p("The data is collected through a telemetry module and stored in a PostgreSQL database hosted on Supabase."),
+                       p("It fetches the data from the PostgreSQL database (hosted on Supabase) and collected through a telemetry module of Vivid Volcano application."),
                        
                        h4("Features"),
                        tags$ul(
