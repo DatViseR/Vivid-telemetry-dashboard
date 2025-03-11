@@ -1,9 +1,9 @@
 # Main application file
 
 # Load libraries and source files
+source("global.R")
 source("Database.R")
 source("highcharter_theme.R")
-source("global.R")
 source("ui.R")
 source("server.R")
 

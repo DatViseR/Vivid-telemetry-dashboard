@@ -1,22 +1,20 @@
-<<<<<<< HEAD
-# Configuration for connecting to Supabase via REST API
-=======
 
->>>>>>> c75e80f02e51f8b255c873dce590f0967412300f
+# Configuration for connecting to Supabase via REST API
+
 get_api_config <- function() {
   # Uses .Renviron file content - hidden variables
   list(
     supabase_url = Sys.getenv("SUPABASE_URL"),
-<<<<<<< HEAD
-    supabase_key = Sys.getenv("SUPABASE_KEY")
-=======
+
+    supabase_key = Sys.getenv("SUPABASE_KEY"),
+
     supabase_key = Sys.getenv("SUPABASE_API_KEY")
->>>>>>> c75e80f02e51f8b255c873dce590f0967412300f
+
   )
 }
 
 # Function to fetch data from Supabase API
-<<<<<<< HEAD
+
 fetch_from_api <- function(endpoint, method = "GET", body = NULL, query_params = NULL) {
   config <- get_api_config()
   
@@ -58,7 +56,7 @@ fetch_from_api <- function(endpoint, method = "GET", body = NULL, query_params =
     }
   }, error = function(e) {
     message("❌ Error calling Supabase API: ", e$message)
-=======
+
 fetch_from_api <- function(endpoint, query_params = NULL) {
   config <- get_api_config()
   
@@ -90,12 +88,12 @@ fetch_from_api <- function(endpoint, query_params = NULL) {
     
   }, error = function(e) {
     message("Error in API request: ", e$message)
->>>>>>> c75e80f02e51f8b255c873dce590f0967412300f
+
     return(NULL)
   })
 }
 
-<<<<<<< HEAD
+
 # Get telemetry data from database (now using Supabase API)
 get_telemetry_data <- function() {
   # Test Supabase connection
@@ -106,18 +104,18 @@ get_telemetry_data <- function() {
     message("❌ Supabase credentials not found in .Renviron file")
     message("📝 Please add SUPABASE_URL and SUPABASE_KEY to your .Renviron file")
     message("⚠️ Using sample data as fallback")
-=======
+
 # Get telemetry data from Supabase
 get_telemetry_data <- function() {
   # Use sample data if .Renviron variables aren't set up
   if (Sys.getenv("SUPABASE_URL") == "" || Sys.getenv("SUPABASE_API_KEY") == "") {
     message("API credentials not found. Using sample data.")
->>>>>>> c75e80f02e51f8b255c873dce590f0967412300f
+
     return(read.csv("sample_data.csv"))
   }
   
   # Fetch data from the app_usage_stats table
-<<<<<<< HEAD
+
   message("🔄 Fetching telemetry data from Supabase API...")
   data <- fetch_from_api("app_usage_stats")
   
@@ -200,7 +198,7 @@ get_telemetry_data <- function() {
   # Count valid duration records
   valid_duration_count <- sum(!is.na(data$session_duration))
   message(paste0("⏱️ Valid session durations: ", valid_duration_count, " out of ", nrow(data), " records"))
-=======
+
   data <- fetch_from_api("app_usage_stats")
   
   if (is.null(data)) {
@@ -217,7 +215,7 @@ get_telemetry_data <- function() {
   data$session_duration <- as.numeric(difftime(data$session_end, 
                                                data$session_start, 
                                                units = "mins"))
->>>>>>> c75e80f02e51f8b255c873dce590f0967412300f
+
   
   return(data)
 }
